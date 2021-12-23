@@ -1,10 +1,10 @@
 ## trait ScalarOpConstants
-- "\_X" indicates BitPat of ???s
+- `\_X` CtrlSigs indicates BitPat containing don't cares only (`???`)
 - control signal bits definition
-    - BR: branch
-    - A{1,2}: ALU operand
-    - IMM : immediate 
-    - DW: Double Word (TODO)
+    - `BR`: branch
+    - `A{1,2}`: ALU operand
+    - `IMM` : immediate 
+    - `DW`: Double Word // TODO: check again later
 
 
 ## trait MemoryOpConstants
