@@ -18,7 +18,7 @@
   Set the instruction fetcher's data width to `fetchWidth * instBits` bits (32 or 64).
 + **decodeWidth** `Int` number of instructions to be decoded per cycle.
 + **retireWidth** `Int` number of instructions to be commited per cycle.
-+ **instBits** `Int` the size of the smallest instruction (16 for RVC otherwise 32). TODO
++ **instBits** `Int` the size of the smallest instruction (16 for RVC otherwise 32). 
 + **nLocalInterrupts** `Int`<br>
   Number of local interrupt lines (which are directly fed to the MIP CSR). (is this spec compatible or Rocket special?)
 + **nL2TLBEntries** `Int` number of L2 TLB entries (added by PR #849, not exactly sure what is this L2 TLB and PTW).
