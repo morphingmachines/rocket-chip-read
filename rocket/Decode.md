@@ -30,16 +30,16 @@
 - `def cover(x: Term)`: check if this (prime Term) includes x (minterm)
 
 ## object Simplify
-- 'def getPrimeImplicants(implicants: Seq[Term], bits: Int): Any` : 
+- `def getPrimeImplicants(implicants: Seq[Term], bits: Int): Any` : 
   Like SimplifyDC, make table of Terms and merge the pairs of Terms in unit distance. 
   As each row of the table is processed, add prime terms of the row to the list of prime terms (List[Term])
   sort and return the list of terms
 
 - `def getEssentialPrimeImplicants(prime: Seq[Term], minterms: Seq[Term]): (Seq[Term],Seq[Term],Seq[Term])` : 
-   - val primeCovers: Converted from the Seqeunce of prime, for each prime get a sequence of minterms which are covered by the prime.
+   - `val primeCovers`: Converted from the Seqeunce of prime, for each prime get a sequence of minterms which are covered by the prime.
    Find the pairs of minterm sequence with inclusive relationship. return the larger sequence.
-   - val essentiallyCovered: list of minterms which are covered by only one prime term
-   - val uncovered: list of minterms which are not covered by any essential prime term
+   - `val essentiallyCovered`: list of minterms which are covered by only one prime term
+   - `val uncovered`: list of minterms which are not covered by any essential prime term
 
 - `def apply(minterms:Seq[Term], dontcares: Seq[Term], bits: Int): Any` :
     
