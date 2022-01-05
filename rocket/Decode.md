@@ -2,7 +2,8 @@
 - Takes instruction, default list of BitPat, and table to decode 
 - 첫번째 CtrlSig에 해당하는 BitPat 부터 시작하여 Instruction을 비교하여 default list of BitPat을 override함. 이러한 방식으로 iterative하게 모든 CtrlSigs를 세팅한다. 
 
-- `def term(lit: BitPat)`: bit-reverses the mask and tranforms BitPat to Term type.
+- `def term(lit: BitPat)`: bit-reverses the mask and tranforms BitPat to Term type. 
+  (term's mask stores ? as 1, 0/1 as 0, where BitPat stores ? as 0, 0/1 as 1)
 
 - `def logic(addr: UInt, addrWidth: Int, cache: Map[Term,Bool], terms: Seq[Term])`: 
   cache는 중복된 Term에 대한 solution. cache: Map[Term, Bool] contatins mapping between Term & bool. 
@@ -26,6 +27,7 @@
 - prime은 아마도 prime implicants를 의미하는 것 같다.
 - `def similar(x: Term)`: 두 Term의 value (BigInt)를 비교하여 그 차이값이 onehot (001000) 꼴이면 True를 반환한다. 
 - `def merge(x: Term)`: prime임을 해제하고, onehot을 제외한 비트의 value와 onehot부분을 ?로 대체한 mask를 새로운 Term으로 반환한다.
+    - `def cover(x: Term)`: 
 
 ## object Simplify
 
