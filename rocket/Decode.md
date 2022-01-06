@@ -20,7 +20,7 @@
   `if (((dterm.mask >> i) & 1) != 0`을 통해서 default Term의 각 decoding result가 ?인지를 확인하고, 맞다면 SimplifyDC 를 call하고, 아니라면 Simplify를 call하여 단순화 작업을 한다. (dontcare case is the typical one; other cases(0, 1) check whether the default bit is subject to change)
    
 
-- the second apply methods exists to recursively handle decoding logic. 
+- the second apply methods exists to iteratively call the first apply method for each bit pattern. 
 
 ## class Term
 - arguments: `(val value: BigInt, val mask: BigInt = 0)`
