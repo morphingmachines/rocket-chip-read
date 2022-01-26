@@ -29,7 +29,7 @@
 - prime은 아마도 prime implicants를 의미하는 것 같다.
 - `def similar(x: Term)`: 두 Term의 value (BigInt)를 비교하여 그 차이값이 onehot (001000) 꼴이면 True를 반환한다. 
 - `def merge(x: Term)`: merge될 term들의 prime을 unset하고, onehot을 제외한 비트의 value와 onehot부분을 ?로 대체한 mask를 새로운 Term을 반환한다. (Note that the prime of new Term is initialized to true)
-- `def cover(x: Term)`: check if this (prime Term) includes x (minterm)
+- `def cover(x: Term)`: check if this (prime Term) includes `x` (minterm)
 
 ## object Simplify
 - `def getPrimeImplicants(implicants: Seq[Term], bits: Int): Any` : 
