@@ -45,6 +45,9 @@ Find the pairs of minterm sequence with inclusive relationship. return the large
    - `val uncovered`: list of minterms which are not covered by any essential prime term
 
 - `def apply(minterms:Seq[Term], dontcares: Seq[Term], bits: Int): Any` :
+
+- `def getCover`: Not yet covered
+- `def getCost`: Not yet covered
     
 
 ## object SimplifyDC
