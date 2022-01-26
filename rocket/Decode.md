@@ -7,6 +7,7 @@
 - `def logic(addr: UInt, addrWidth: Int, cache: Map[Term,Bool], terms: Seq[Term])`: 
   cache는 중복된 Term에 대한 solution. cache: Map[Term, Bool] contatins mapping between Term & bool. 
   각각의 Term의 element t에 대해서 addr 와 t.value를 비교하여 일치하는 값이 하나라도 있으면 True를 반환.
+  t.mask가 1이면 해당하는 부분은 dontcare로 그 비트는 비교를 생략한다. (나머지 부분만 일치하면 True)
 
 - `private val caches = Map[UInt,Map[Term,Bool]]()` 
   
