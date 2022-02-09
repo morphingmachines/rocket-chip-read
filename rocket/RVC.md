@@ -19,6 +19,16 @@ class ExpandedInstruction
 | rs2                    | UInt             | index of the source register 2        |
 | rs3                    | UInt             | index of the source register 3        |
 
+
+class RVCDecoder
+------------------------
+`def inst(bits: UInt, rd: UInt = x(11,7), rs1: UInt = x(19,15), rs2: UInt = x(24,20), rs3: UInt = x(31,27))` is used with default arguments when not `usingCompressed`. (passthrough mode)
+
+decode mode: Not read yet.
+
+
+
+
 class RVCExpander
 -------------------------
 *RVC decoder unit.*
