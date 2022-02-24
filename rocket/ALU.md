@@ -13,7 +13,7 @@ class ALU
 | name                   | type             | direction  | description                           |
 | :---                   | :--:             | :--:       | :---                                  |
 | p                      | Parameters       | param      | configuration                         |
-| dw                     | Bits             | I          | datawidth: `DW_64` `DW_32`           |
+| dw                     | Bits             | I          | datawidth: `DW_64` `DW_32`            |
 | fn                     | Bits             | I          | ALU function                          |
 | in1                    | UInt             | I          | ALU input 1                           |
 | in2                    | UInt             | I          | ALU input 2                           |

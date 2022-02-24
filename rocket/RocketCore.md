@@ -28,6 +28,23 @@ Not read yet
 
 #### Execute Stage
 
+- `val bypass_mux`: map bypassed data from `bypass_sources`
+- `val ex_rs` : for each rs, yield a mux to select bypassed data indexed by rs_lsb or original rs data
+- `val ex_op1` and `ex_op2` : select which operands to use (rs1/pc, rs2/imm/size)
+- `val alu` : instantiate a alu module with injecting io signals (dw(double word), fn(function), in2, in1)
+- `val div` : instantiate a MulDiv module (when `pipelinedMul` is turned off then set mulUnroll to 0)
+- `val mul` : instantiate a pipelinedMul module
+- `ex_reg_mem_size := id_inst(0)(13,12)` : [13:12] bit field represents log2 of data width in Bytes (00: 8bit(LB), 01: 16bit(LH), 10: 32bit(LW)) (+ [14] bit field represents unsigned memory operation)
+![load instruction](./load.png)
+- `val do_bypass` : checks whether bypassing needed
+- `val bypass_src` : select the source to bypass by PriorityEncoder (x0 -> mem_wdata -> wb_wdata -> D$data)
+- `val ex_reg_rs_lsb` and `val ex_reg_rs_msb` : When bypassing occurs, assign bypass source to lsb and ignore msb. Otherwise, pass through original rs.
+- `when (id_illegal_insn)` : store the instruction in rs1
+- `val ctrl_killx` : checks whether to replay inst in ex stage // TODO: put in a control flow diagram
+- `val ex_slow_bypass` : set flag of slow bypassing when it takes 2 cycles to use data from LB/LH/SC
+
+
+
 
 ### class Scoreboard
 - keeps information about the (long-latency) instructions being executed. The register has to be kept reserved until the instruction is finished thus invoking the set method. When instruction finishes, it clears the bit.
@@ -43,4 +60,5 @@ Not read yet
 - rf is implemented as Mem(n, w)
 - `read(addr: UInt)`: reads from certain register
 - `write(addr: UInt, data: UInt)`: supports forwarding (when `wb_waddr == id_radder`, other cases are dealt using `bypass_sources`)
+
 
