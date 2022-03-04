@@ -31,6 +31,7 @@ Not read yet
 - `val bypass_mux`: map bypassed data from `bypass_sources`
 - `val ex_rs` : for each rs, yield a mux to select bypassed data indexed by rs_lsb or original rs data
 - `val ex_op1` and `ex_op2` : select which operands to use (rs1/pc, rs2/imm/size)
+  - size is used for JAL instruction to indicate the next pc. (either pc+4 or pc+2)
 - `val alu` : instantiate a alu module with injecting io signals (dw(double word), fn(function), in2, in1)
 - `val div` : instantiate a MulDiv module (when `pipelinedMul` is turned off then set mulUnroll to 0)
 - `val mul` : instantiate a pipelinedMul module
