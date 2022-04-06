@@ -65,7 +65,8 @@ Not read yet
 - `elsewhen(ex_pc_valid)` : pass over signals from EX stage to MEM stage, conditioned by ex_pc_valid (stage is valid or to be replayed)
   - TODO: flush I$ on D-mode JALR
 - TODO: mem_breakpoint
-- `ctrl_killm` : kill when dcache kill (structural hazard on writeback port), memory exception, or FPU kill
+- `replay_mem` : replay when dcache kill (structural hazard on writeback port), mem_reg_replay, or FPU kill
+- `ctrl_killm` : kill when dcache kill, memory exception, or FPU kill
 
 #### Write Back Stage
 - `when(mem_pc_valid)` : pass over signals from MEM stage to WB stage, conditioned by mem_pc_valid
