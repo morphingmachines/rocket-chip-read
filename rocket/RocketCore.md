@@ -74,7 +74,7 @@ Not read yet
 - `ll_wdata, ll_waddr` : Long Latency instructions - wired default to division module response data/tag; If using RoCC & it is fired, wired to rocc response data/rd
 - `rf_wdata, rf_waddr` : Register File data/addr - dmem or ll(long latency) or CSR(PCR) or from reg_wdata(alu, fpu, or JR inst., etc.)
 - `id_sboard_hazard` : checks if ID stage tries to read the data yet uncommitted from scoreboard, turning on stall signal at ID stage.<br/>
-![Control Flow of take_pc and replay](./control_flow_replay&takepc.png)
+![Control Flow of take pc and replay](./control_flow_replay&takepc.png)
 
 ### class Scoreboard
 - keeps information about the (long-latency - division, D$ miss, RoCC) instructions being executed. The register is updated at WB stage and has to be kept reserved until the instruction is finished. When instruction finishes with ll_wen signal set, it clears the bit.
