@@ -16,23 +16,27 @@ Not read yet
 ![icache](./icache.png)
 ![pipeline](./pipeline.png)
 
-#### Decode Stage
+### Decode Stage
 - `decode_table`: a mapping of Instructions -> List of control signals which are assigned into `id_ctrl` Wire.
-- `def decodeReg`: extracts regfile addresses from instruction. Also checks whether the instruction is legal with appropriate number of registers (if RVE 16, else 32).
+- `def decodeReg`: extracts RegFile addresses from instruction. Also checks whether the instruction is legal with appropriate number of registers (if RVE 16, else 32).
 - `rf`: instatiates a RegFile. 31 entries RV32, 15 entries in RVE, each with `xLen` width.
 - `id_rs`: contains rs1, rs2 values read from the RegFile
-- CSRFile (Control Status Register File): not read yet
-- SCIEDecoder (SiFive Custom Instruction Extension Decoder): not read yet
-- BPU (Breakpoint Unit): not read yet
+- `csr`: instance of CSRFile (Control Status Register File, pcr) details in `CSR.scala` (TODO)
+- `id_scie_decoder`: instance of SCIEDecoder (SiFive Custom Instruction Extension Decoder) details in `SCIE.scala` (TODO)
+- `bpu`: instance of BPU (Breakpoint Unit), details in `BPU.scala` (TODO)
 - Picks the highest priority (exception, cause) from various sources(`csr`, `bpu`, `FrontendResp`,`id_illegal_inst`) and store it into `(id_xcpt, id_cause)`
-- Detect bypass opportunities
-  - `bypass_sources`는 EX, MEM stage에서 write하는 instrcution인지, write address, 해당하는 wdata를 IndexedSeq에 저장한다.
-  - EX, MEM stage에서 write을 하는 instruction인지와 write address가 현 ID stage의 read address가 같은지를 판단하여 bypass 필요여부를 `id_bypass_src`에 넣어둔다
+- **Bypass (Forwarding)**
+  - `bypass_sources` holds information on bypass sources in list of tuple(condition, waddr, wdata).
+    - First element indicates the bypass conditions (upper in the list have higher priority). Condition includes treating x0 as bypass, whether the data to be written is passing the EX or MEM stage, and whether the operation reads from L1 data to write to RegFile (e.g. LD))
+    - Second element indicates the write address
+    - Last element indicates the source of the write data (0, `mem_reg_wdata`, `wb_reg_wdata`, `dcache_bypass_data`)
+  - It is notable that WB stage bypass is handled in RegFile
+  - `id_bypass_src` stores whether rs1, rs2 needs forwarding for different bypass sources (2x4 boolean entries) by checking if write condition is true and if read/write address matches.
 
 
-#### Execute Stage
-- `bypass_mux`: map bypassed data from `bypass_sources`
-- `ex_rs` : for each rs, yield a mux to select bypassed data indexed by rs_lsb or original rs data
+### Execute Stage
+- `bypass_mux`: contains the wdata from `bypass_sources` (00 -> 0, 01 -> `mem_reg_wdata`, 
+- `ex_rs` : for each rs (rs1, rs2), yield a mux to select bypassed data indexed by `ex_reg_rs_lsb` or original rs data
 - `ex_op1` and `ex_op2` : select which operands to use (rs1/pc, rs2/imm/size)
   - size is used for JAL instruction to indicate the next pc. (either pc+4 or pc+2)
 - `alu` : instantiate a alu module with injecting io signals (dw(double word), fn(function), in2, in1)
@@ -53,7 +57,7 @@ Not read yet
 - `ctrl_killx` : checks whether to kill inst in ex stage 
 - `ex_slow_bypass` : set flag of slow bypassing when it takes 2 cycles to use data from LB/LH/SC (sign extension in WB stage?)
 
-#### Memory Stage
+### Memory Stage
 - `mem_br_target` : which branch target to jump (taken branch's target, JAL target, or next PC)
 - `mem_npc` : if jalr or sfence, get encoded Virtual Address, else get branch target. Then AND with -2 (=1111...110), to make the PC a multiple of 2. (TODO)
     - More into Virtual Address: (with default option, PAddr=32, v=39, and XLen=64) : unmatched with spec - Why?  +  sign extend with VA and zero extend with PA, why? 
@@ -68,7 +72,7 @@ Not read yet
 - `replay_mem` : replay when dcache kill (structural hazard on writeback port), mem_reg_replay, or FPU kill
 - `ctrl_killm` : kill when dcache kill, memory exception, or FPU kill
 
-#### Write Back Stage
+### Write Back Stage
 - `when(mem_pc_valid)` : pass over signals from MEM stage to WB stage, conditioned by mem_pc_valid
 - `replay_wb` : replay if wb_reg_replay or io.dmem.s2_nack or rocc not ready
 - `take_pc_wb` : take pc if replay_wb or exception or ERET or flushing pipeline
