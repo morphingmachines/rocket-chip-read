@@ -1,6 +1,6 @@
 
 ## case class RocketCoreParams
-- sets parameters to the rocket core, lazily evaluated 
+- sets parameters to the rocket core, lazily evaluated
 - extends `CoreParams` from `tile/Core.scala`
 
 
@@ -35,18 +35,18 @@ Not read yet
 
 
 ### Execute Stage
-- `bypass_mux`: contains the wdata from `bypass_sources` (00 -> 0, 01 -> `mem_reg_wdata`, 
-- `ex_rs` : for each rs (rs1, rs2), yield a mux to select bypassed data indexed by `ex_reg_rs_lsb` or original rs data
+- `bypass_mux`: contains the wdata from `bypass_sources` (00 -> 0, 01 -> `mem_reg_wdata`, 10 -> `wb_reg_wdata`, 11 -> `dcache_bypass_data`)
+- `ex_rs` : for each rs (rs1, rs2), yield a mux to select 1. bypassed data indexed by `ex_reg_rs_lsb` or 2. original rs data
 - `ex_op1` and `ex_op2` : select which operands to use (rs1/pc, rs2/imm/size)
-  - size is used for JAL instruction to indicate the next pc. (either pc+4 or pc+2)
-- `alu` : instantiate a alu module with injecting io signals (dw(double word), fn(function), in2, in1)
-- `div` : instantiate a MulDiv module (when `pipelinedMul` is turned off then set mulUnroll to 0)
+  - size is used for JAL instruction to indicate the next pc. (either pc+4 or pc+2). Note that the time npc is calculated is different from JALR which uses the default npc calculated in MEM stage.
+- `alu` : instantiate a alu module with injecting io signals (`dw`(double word), `fn`(function), `in2`, `in1`)
+- `div` : instantiate a MulDiv module (when `pipelinedMul` is turned off then set `mulUnroll` to 0)
 - `mul` : instantiate a pipelinedMul module
-- `when(!ctrl_killd)` 
+- `when(!ctrl_killd)`
   - `when(id_fence...)` : TODO
-  - `when(id_xcpt)` : deals with different `id_xcpt` causes and configure ALU to send specific data down the writeback pipeline.  
-  For xcpts in FrontendResp and BPU (`xcpt0`, `xcpt1`, `bpu.io.xcpt_if`), send corresponding PC, PC+2 down the pipeline to Exception Program Counter (EPC) TODO: 'bpu.io.xcpt_if'  
-  For other xcpts causes, send the instruction (configured as rs1 + 0). 
+  - `when(id_xcpt)` : deals with different `id_xcpt` causes and configure ALU to send specific data down the writeback pipeline.
+  For xcpts in FrontendResp and BPU (`xcpt0`, `xcpt1`, `bpu.io.xcpt_if`), send corresponding PC, PC+2 down the pipeline to Exception Program Counter (EPC) TODO: 'bpu.io.xcpt_if'
+  For other xcpts causes, send the instruction (configured as rs1 + 0).
 - `ex_reg_mem_size := id_inst(0)(13,12)` : [13:12] bit field represents log2 of data width in Bytes (00: 8bit(LB), 01: 16bit(LH), 10: 32bit(LW)) ([14] bit field represents unsigned memory operation)<br/>
 ![load instruction](./load.png)
 - `do_bypass` : checks whether bypassing needed
@@ -54,17 +54,17 @@ Not read yet
 - `ex_reg_rs_lsb` and `ex_reg_rs_msb` : When bypassing occurs, assign bypass source to lsb and ignore msb. Otherwise, pass through original rs.
 - `when (id_illegal_insn)` : store the instruction in rs1
 - `replay_ex` : replay if ex_reg_replay or structural hazard or load bypassing failure due to D$ miss
-- `ctrl_killx` : checks whether to kill inst in ex stage 
+- `ctrl_killx` : checks whether to kill inst in ex stage
 - `ex_slow_bypass` : set flag of slow bypassing when it takes 2 cycles to use data from LB/LH/SC (sign extension in WB stage?)
 
 ### Memory Stage
 - `mem_br_target` : which branch target to jump (taken branch's target, JAL target, or next PC)
 - `mem_npc` : if jalr or sfence, get encoded Virtual Address, else get branch target. Then AND with -2 (=1111...110), to make the PC a multiple of 2. (TODO)
-    - More into Virtual Address: (with default option, PAddr=32, v=39, and XLen=64) : unmatched with spec - Why?  +  sign extend with VA and zero extend with PA, why? 
+    - More into Virtual Address: (with default option, PAddr=32, v=39, and XLen=64) : unmatched with spec - Why?  +  sign extend with VA and zero extend with PA, why?
 - `mem_wrong_npc`: (When using branch predictor) checks if the predicted npc was correct (ex_pc_valid: EX / inst.valid: ID / imem.valid: IF).
 - `mem_direction_misprediction` : checks whether the direction (taken or not) is mispredicted for branch instructions.
 - `mem_misprediction` : checks whether the prediction was correct.
-- `take_pc_mem : checks if npc misprediction occurred or sfence(TODO), when the stage is valid (mem_reg_valid).
+- `take_pc_mem` : checks if npc misprediction occurred or sfence(TODO), when the stage is valid (mem_reg_valid).
 - `mem_reg_flush_pipe` : seems to be related to sfence instruction (TODO)
 - `elsewhen(ex_pc_valid)` : pass over signals from EX stage to MEM stage, conditioned by ex_pc_valid (stage is valid or to be replayed)
   - TODO: flush I$ on D-mode JALR
