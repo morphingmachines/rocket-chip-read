@@ -80,6 +80,11 @@ Not read yet
 - `rf_wdata, rf_waddr` : Register File data/addr - dmem or ll(long latency) or CSR(PCR) or from reg_wdata(alu, fpu, or JR inst., etc.)
 - `id_sboard_hazard` : checks if ID stage tries to read the data yet uncommitted from scoreboard, turning on stall signal at ID stage.<br/>
 ![Control Flow of take pc and replay](./control_flow_diagram.png)
+- `id_ex_hazard`: stall for RAW/WAW hazards on CSRs, loads, AMOs, and mul/div in execute stage. wdata for these data are resolved after EX stage.
+  - Note that `data_hazard_ex` includes FP instructions that writes to integer RegFile (e.g. fp comparision)
+- `id_mem_hazard`: stall for RAW/WAW hazards on CSRs, LB/LH, and mul/div in memory stage. wdata for these data are resolved after MEM stage.
+- `id_wb_hazard`: stall for RAW/WAW hazards on load/AMO misses and mul/div in writeback.
+
 
 ### class Scoreboard
 - keeps information about the (long-latency - division, D$ miss, RoCC) instructions being executed. The bit of the sboard is updated at WB stage and has to be kept reserved until the instruction is finished. When instruction finishes with ll_wen signal set, it clears the bit.
