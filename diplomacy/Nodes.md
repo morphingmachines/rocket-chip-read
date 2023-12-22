@@ -10,17 +10,34 @@
 **********************
 
 > Explanation of general terms:
-> - Inwards: the inner/source/client/master side of communication. <br>(eg. client => packet => [inner | outer] => packet => manager)
-> - Outwards: the outer/sink/manager/slave side of communication.
-> - Downwards: parameters configing the flow from inner to outer.
-> - Upwards: parameters configing the flow outer to inner.
-> - D/U: the node parameter for downwards/upwards flow. <br>(eg: client ==> D ==> manager, client <== U <== manager )
-> - E: the generated packet helper from U and D.
-> - B: the generated IO bundle from E.
+> - Diplomatic node represent "ports" of a component, or interfaces of a hardware module in the system that is represented as a diplomatic graph.
+>   - Each node may have multiple interfaces which are basically Chisel-types (Bundles or 
+UInt or Bool).
+>   - Node can have both "Sink" and "Source" ports. A directed edge from "Source" port to "Sink" port, defines a port mapping (interface connection) between the respective modules that contains these nodes.
+> - During parameter negotiation phase, parameters flow along the edges of the diplomatic graph. 
+>   - Parameters that flow along the direction of the edge (Source to Sink) are called "Downward-flowing" parameters.
+>   - Parameters that flow along the opposite direction of the edge (Sink to Source) are called "Upward-flowing" parameters. 
 
-![Node Terms](images/node-terms.png) 
+![Diplomatic Node](images/diplomatic-node.png)
 
-Node implementation
+> - Edge that is coming into the node is called "Inward-Edge" (EI) w.r.t to the node.
+> - Edge that is going out of the node is called "Outward-Edge" w.r.t to the node.   
+> - Inward-side of a node defines the Sink/Manager/Slave port of a component in the system.
+> - Outward-side of a node defines the Source/client/Master port of a component in the system.
+> - Downward-flowing and Upward-flowing parameters are the pre-negotiated parameters.
+>   - DI: Inward-side Downward-flowing parameters are received at the Inward-side of a node
+>   - UI: Inward-side Upward-flowing parameters are generated at the Inward-side of a node
+>   - DO: Outward-side Downward-flowing parameters are generated at the outward-side of a node
+>   - UO: Outward-side Upward-flowing parameters are received at the outward-side of a node
+>   - Inside a node, UI is computed from UO, and DO is computed from DI.
+> - Edge parameters are called negotiated parameters
+>   - EI: Inward-side edge parameters computed as a function of DI and UI
+>   - EO: Outward-side edge parameters computed as a function of DO and UO
+
+![Diplomatic Edge](images/diplomatic-edge.png) 
+> - The parameterized Bundles or Interfaces depends on EI and EO to resolve the parameters. 
+
+![Diplomatic Node Composition](images/diplomatic-node-composition.png)
 -----------------------------------------
 
 ### trait InwardNodeImp
