@@ -10,7 +10,7 @@ In this framework, an SoC design is partitioned into **`LazyModules`** where a `
 - one or more diplomatic nodes (extends from `BaseNode`), where parameterized hardware is going to be generated. Any module that wants to send or receive parameter information must have one or more nodes.
 - `LazyModuleImp`: actual Chisel RTL implementation
 
-The interactions (connections) between `LazyModule`s is defined as directed edges between the diplomatic nodes. Now the parameter negotiation is performed on a diplomatic graph that represents a SoC design. Basically in a diplomatic graph, diplomatic nodes represent points in the design where diplomatic parameters are used to emit hardware and diplomatic edges represent a directed pairing of master and slave interfaces.
+The interactions (connections) between `LazyModule`s is defined as directed edges between the diplomatic nodes. Now the parameter negotiation is performed on a diplomatic graph that represents a SoC design. Basically in a diplomatic graph, diplomatic nodes represent points in the design where diplomatic parameters are used to emit hardware and diplomatic edges represent a directed pairing of client (master) and manager (slave) interfaces.
 
 
 Diplomacy framework employees two-stage elaboration for SoC generation:
