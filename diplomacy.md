@@ -31,6 +31,8 @@ Diplomacy framework employees two-stage elaboration for SoC generation:
   basic parameter definitions (address space).
 + **[Resources](diplomacy/Resources.md)**
   detailed definition of the resource attached to a device (device tree generation and PMA propagation).
+  **[BundleBridge](diplomacy/BundleBridge)**
+  bundlebridge
 
 
 
