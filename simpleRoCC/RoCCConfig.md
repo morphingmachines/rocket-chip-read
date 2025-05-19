@@ -9,7 +9,7 @@ This package describes the various configurations of RocketTile with ROCCIO
 ## WithAccumulatorRoCCExample ##
 
 ## RV32WithRoCCIOConfig ##
-[RV32Config](../sim/Config.md/RV32Config) ++ [WithRoCCBridge](WithRoCCBridge)
+[RV32Config](../sim/Config.md/#RV32Config) ++ [WithRoCCBridge](#WithRoCCBridge)
 
 ## RV32WithRoCCAccConfig ##
-[RV32Config](../sim/Config.md/RV32Config) ++ [WithRoCCBridge](WithAccumulatorRoCCExample)
+[RV32Config](../sim/Config.md/#RV32Config) ++ [WithRoCCBridge](#WithAccumulatorRoCCExample)
